@@ -1,0 +1,897 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>2027 냥운세</title>
+<meta name="description" content="고양이 점술사가 사주로 풀어 주는 2027년 정미년 신년운세">
+<meta name="theme-color" content="#141a36">
+<meta property="og:title" content="2027 냥운세">
+<meta property="og:description" content="올해 운세, 내가 봐주겠다냥">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Gowun+Dodum&family=Gaegu:wght@400;700&family=Noto+Serif+KR:wght@600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/lunar-javascript@1.6.12/lunar.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.11/dist/html-to-image.js"></script>
+<style>
+:root{
+  --night:#141a36;
+  --night-deep:#0e1328;
+  --plum:#2a1f4a;
+  --plum-soft:#3a2d62;
+  --gold:#e8c77a;
+  --gold-dim:#b89a55;
+  --cream:#f3ecdc;
+  --cream-dim:#c9c0ad;
+  --paper:#efe3c8;
+  --paper-edge:#d8c497;
+  --ink:#3b2b1c;
+  --ink-soft:#6b5640;
+  --seal:#a63d2a;
+  --wood:#4f7a4a; --fire:#b4472f; --earth:#a27a35; --metal:#7d7f86; --water:#35557d;
+  --serif:"Gowun Batang","Noto Serif KR",serif;
+  --sans:"Gowun Dodum","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  --hand:"Gaegu","Gowun Dodum",cursive;
+  --hanja:"Noto Serif KR","Gowun Batang",serif;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;min-height:100vh;background:var(--night);color:var(--cream);
+  font-family:var(--sans);font-size:16px;line-height:1.6;overflow-x:hidden;
+}
+button,select,input{font:inherit;color:inherit}
+button{cursor:pointer}
+[hidden]{display:none !important}
+
+/* ── 밤하늘 ───────────────────────── */
+#sky{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.star{position:absolute;border-radius:50%;background:var(--cream);opacity:.2;animation:twinkle var(--d,4s) ease-in-out var(--delay,0s) infinite}
+.star.cross{background:none;width:9px;height:9px}
+.star.cross::before,.star.cross::after{content:"";position:absolute;left:50%;top:50%;background:var(--gold);transform:translate(-50%,-50%)}
+.star.cross::before{width:1.5px;height:100%}
+.star.cross::after{width:100%;height:1.5px}
+@keyframes twinkle{0%,100%{opacity:.15}50%{opacity:.95}}
+.moon{position:absolute;top:84px;left:-26px;width:90px;height:90px;border-radius:50%;box-shadow:22px 6px 0 0 #e9dcb4;opacity:.75}
+
+/* ── 점집 천막 ───────────────────── */
+.awning{position:relative;z-index:1;height:34px;
+  background:
+    radial-gradient(circle at 18px -4px, var(--plum) 18px, transparent 19px) 0 0/36px 34px repeat-x;
+}
+.awning::before{content:"";position:absolute;left:0;right:0;top:0;height:10px;background:var(--plum)}
+.awning::after{content:"";position:absolute;left:0;right:0;top:10px;height:2px;
+  background:repeating-linear-gradient(90deg,var(--gold) 0 6px,transparent 6px 12px);opacity:.7}
+
+/* ── 방명록 버튼 ─────────────────── */
+.guest-btn{
+  position:fixed;top:calc(14px + env(safe-area-inset-top));right:14px;z-index:30;
+  display:flex;align-items:center;gap:6px;padding:7px 12px 7px 14px;
+  background:var(--paper);color:var(--ink);border:0;border-radius:3px 14px 14px 3px;
+  font-family:var(--serif);font-weight:700;font-size:14px;
+  box-shadow:0 2px 0 var(--paper-edge),0 6px 14px rgba(0,0,0,.35);
+}
+.guest-btn::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--night);margin-right:2px}
+.guest-btn svg{width:16px;height:16px}
+
+/* ── 레이아웃 ───────────────────── */
+main,.view{position:relative;z-index:1}
+.wrap{max-width:440px;margin:0 auto;padding:0 16px 48px}
+
+.hero{text-align:center;padding-top:6px}
+.hero .cat{width:210px;max-width:62vw;display:block;margin:4px auto -6px}
+.title{font-family:var(--serif);font-weight:700;font-size:44px;line-height:1.1;margin:8px 0 6px;color:var(--gold);letter-spacing:-.01em}
+.title .yr{display:block;font-size:20px;letter-spacing:.42em;color:var(--cream-dim);font-weight:400;margin-bottom:4px;padding-left:.42em}
+.subtitle{font-family:var(--serif);font-size:17px;color:var(--cream);margin:0 0 26px}
+.subtitle::before,.subtitle::after{content:"·";color:var(--gold);margin:0 .6em}
+
+/* ── 입력 판 ───────────────────── */
+.board{
+  position:relative;background:var(--plum);padding:22px 18px 20px;border-radius:4px;
+  border:1px solid rgba(232,199,122,.55);
+  box-shadow:inset 0 0 0 4px var(--plum),inset 0 0 0 5px rgba(232,199,122,.25);
+}
+.board-label{position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:var(--night);padding:0 12px;
+  font-family:var(--serif);font-size:13px;letter-spacing:.3em;color:var(--gold);white-space:nowrap}
+.field{margin-bottom:18px}
+.field:last-child{margin-bottom:0}
+.field-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
+.field-name{font-family:var(--serif);font-weight:700;font-size:15px;color:var(--cream)}
+.field-name small{font-family:var(--sans);font-weight:400;font-size:12px;color:var(--cream-dim);margin-left:6px}
+.row{display:flex;gap:8px}
+.row > *{flex:1;min-width:0}
+.row .grow{flex:1.35}
+
+select{
+  appearance:none;-webkit-appearance:none;width:100%;
+  background:var(--night-deep) url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6'><path d='M0 0l5 6 5-6z' fill='%23e8c77a'/></svg>") no-repeat right 10px center;
+  border:0;border-bottom:1.5px solid var(--gold-dim);border-radius:3px 3px 0 0;
+  padding:10px 24px 9px 10px;font-size:16px;color:var(--cream);
+}
+select:focus{outline:none;border-bottom-color:var(--gold);background-color:#151c3c}
+select:disabled{opacity:.35}
+select option{background:var(--night);color:var(--cream)}
+
+.seg{display:inline-flex;border:1px solid var(--gold-dim);border-radius:999px;padding:2px;background:var(--night-deep)}
+.seg button{border:0;background:none;padding:5px 14px;border-radius:999px;font-size:14px;color:var(--cream-dim)}
+.seg button[aria-pressed="true"]{background:var(--gold);color:var(--night);font-weight:700}
+.seg.wide{display:flex}
+.seg.wide button{flex:1;padding:9px 0;font-size:15px}
+
+.check{display:inline-flex;align-items:center;gap:7px;font-size:14px;color:var(--cream);cursor:pointer;user-select:none}
+.check input{appearance:none;-webkit-appearance:none;width:18px;height:18px;margin:0;border:1.5px solid var(--gold-dim);border-radius:3px;background:var(--night-deep);display:grid;place-items:center}
+.check input:checked{background:var(--gold);border-color:var(--gold)}
+.check input:checked::after{content:"";width:5px;height:9px;border:solid var(--night);border-width:0 2px 2px 0;transform:rotate(45deg) translate(-1px,-1px)}
+.leap-row{margin-top:10px}
+
+/* ── 버튼 ─────────────────────── */
+.go{
+  display:block;width:100%;margin:26px 0 0;padding:16px 10px;border:0;border-radius:6px;
+  background:var(--gold);color:var(--night);font-family:var(--serif);font-weight:700;font-size:20px;letter-spacing:.04em;
+  box-shadow:0 4px 0 var(--gold-dim),0 10px 24px rgba(232,199,122,.18);
+  transition:transform .08s, box-shadow .08s;
+}
+.go:active:not(:disabled){transform:translateY(3px);box-shadow:0 1px 0 var(--gold-dim)}
+.go:disabled{background:#4a4566;color:#8d87a6;box-shadow:0 4px 0 #34304d;cursor:not-allowed}
+.go .paw{display:inline-block;width:18px;height:18px;vertical-align:-2px;margin-left:6px}
+.hint{min-height:1.6em;margin:10px 0 0;text-align:center;font-size:14px;color:var(--gold)}
+
+/* ── 로딩 ─────────────────────── */
+.loading{position:fixed;inset:0;z-index:50;background:rgba(14,19,40,.94);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center}
+.loading .cat{width:220px;max-width:64vw}
+.loading-text{font-family:var(--serif);font-size:18px;color:var(--cream);margin-top:14px;min-height:1.7em;transition:opacity .3s}
+.loading-dots{display:flex;gap:7px;margin-top:10px}
+.loading-dots i{width:6px;height:6px;border-radius:50%;background:var(--gold);animation:dot 1.2s infinite}
+.loading-dots i:nth-child(2){animation-delay:.2s}.loading-dots i:nth-child(3){animation-delay:.4s}
+@keyframes dot{0%,100%{opacity:.2;transform:translateY(0)}40%{opacity:1;transform:translateY(-4px)}}
+.cat .glow{transform-origin:center;transform-box:fill-box}
+.cat.peering .glow{animation:glow 1.6s ease-in-out infinite}
+.cat.peering .pupils{animation:peek 3.2s ease-in-out infinite}
+.cat.peering .sparkle{animation:sparkle 1.6s ease-in-out infinite}
+.cat .tail{transform-origin:168px 205px;animation:tail 4s ease-in-out infinite}
+@keyframes glow{0%,100%{opacity:.35;transform:scale(.92)}50%{opacity:.9;transform:scale(1.08)}}
+@keyframes peek{0%,100%{transform:translate(0,4px)}30%{transform:translate(-3px,5px)}65%{transform:translate(3px,5px)}}
+@keyframes sparkle{0%,100%{opacity:0}50%{opacity:1}}
+@keyframes tail{0%,100%{transform:rotate(0)}50%{transform:rotate(-7deg)}}
+
+/* ── 결과 ─────────────────────── */
+#resultArea{margin-top:34px;scroll-margin-top:16px}
+.paper{
+  position:relative;color:var(--ink);padding:34px 22px 22px;border-radius:2px;
+  background-color:var(--paper);
+  background-image:
+    /* 종이 결 (SVG 노이즈, 이미지 저장 때 깨지지 않도록 base64) */
+    url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPScxODAnIGhlaWdodD0nMTgwJz48ZmlsdGVyIGlkPSduJz48ZmVUdXJidWxlbmNlIHR5cGU9J2ZyYWN0YWxOb2lzZScgYmFzZUZyZXF1ZW5jeT0nLjg1JyBudW1PY3RhdmVzPSczJyBzdGl0Y2hUaWxlcz0nc3RpdGNoJy8+PGZlQ29sb3JNYXRyaXggdmFsdWVzPScwIDAgMCAwIC4zNSAgMCAwIDAgMCAuMjQgIDAgMCAwIDAgLjEgIDAgMCAwIC4yIDAnLz48L2ZpbHRlcj48cmVjdCB3aWR0aD0nMTAwJScgaGVpZ2h0PScxMDAlJyBmaWx0ZXI9J3VybCgjbiknLz48L3N2Zz4="),
+    radial-gradient(ellipse at 12% 8%, rgba(160,110,50,.18), transparent 40%),
+    radial-gradient(ellipse at 90% 96%, rgba(150,100,40,.22), transparent 45%),
+    radial-gradient(ellipse at 50% 50%, transparent 60%, rgba(120,80,30,.18));
+  box-shadow:0 14px 34px rgba(0,0,0,.45);
+}
+.paper::before{content:"";position:absolute;inset:8px;border:1.5px solid rgba(110,80,40,.55);pointer-events:none}
+.paper::after{content:"";position:absolute;inset:12px;border:.8px solid rgba(110,80,40,.35);pointer-events:none}
+.corner{position:absolute;width:38px;height:38px;pointer-events:none;
+  background:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCA0MCA0MCc+PGcgZmlsbD0nbm9uZScgc3Ryb2tlPScjNmU1MDI4JyBzdHJva2Utd2lkdGg9JzEuMyc+PHBhdGggZD0nTTQgMzZWMTJBOCA4IDAgMCAxIDEyIDRIMzYnLz48cGF0aCBkPSdNOSAzNlYxNmE3IDcgMCAwIDEgNy03aDIwJy8+PHBhdGggZD0nTTE0IDIyYzAtNSAzLTggOC04Jy8+PC9nPjxjaXJjbGUgY3g9JzknIGN5PSc5JyByPScyLjQnIGZpbGw9JyM2ZTUwMjgnLz48cGF0aCBkPSdNMjIgMjJsMS4yIDIuOCAyLjggMS4yLTIuOCAxLjJMMjIgMzBsLTEuMi0yLjgtMi44LTEuMiAyLjgtMS4yeicgZmlsbD0nI2E2M2QyYScvPjwvc3ZnPg==") no-repeat center/contain}
+.corner.tl{top:4px;left:4px}
+.corner.tr{top:4px;right:4px;transform:scaleX(-1)}
+.corner.bl{bottom:4px;left:4px;transform:scaleY(-1)}
+.corner.br{bottom:4px;right:4px;transform:scale(-1,-1)}
+
+.r-head{text-align:center;position:relative}
+.r-kicker{font-family:var(--hanja);font-size:12px;letter-spacing:.5em;color:var(--ink-soft);padding-left:.5em}
+.r-title{font-family:var(--serif);font-weight:700;font-size:25px;margin:4px 0 0;line-height:1.3}
+.seal{position:absolute;right:2px;top:-12px;width:44px;height:44px;border:2px solid var(--seal);border-radius:4px;color:var(--seal);
+  font-family:var(--hanja);font-weight:600;font-size:15px;line-height:1.05;display:grid;place-items:center;text-align:center;transform:rotate(8deg);opacity:.82}
+
+.rule{display:flex;align-items:center;gap:10px;margin:22px 0 12px;font-family:var(--serif);font-weight:700;font-size:17px;color:var(--ink)}
+.rule::before,.rule::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(110,80,40,.6),transparent)}
+.rule span{white-space:nowrap}
+.rule em{font-style:normal;font-family:var(--hanja);font-size:12px;color:var(--ink-soft);margin-left:5px;font-weight:600}
+
+/* 사주 */
+.pillars{display:flex;justify-content:center;gap:8px;margin-top:14px}
+.pillar{flex:0 1 64px;text-align:center;border:1px solid rgba(110,80,40,.4);padding:6px 0 8px;background:rgba(255,250,235,.35)}
+.pillar .lab{font-size:11px;color:var(--ink-soft);letter-spacing:.1em}
+.pillar .ch{font-family:var(--hanja);font-weight:600;font-size:28px;line-height:1.15;margin-top:4px}
+.pillar .ko{font-size:12px;color:var(--ink-soft);line-height:1.2}
+.pillar .ch.wood{color:var(--wood)}.pillar .ch.fire{color:var(--fire)}.pillar .ch.earth{color:var(--earth)}.pillar .ch.metal{color:var(--metal)}.pillar .ch.water{color:var(--water)}
+.pillar.day{border-color:var(--seal);border-width:1.5px}
+.pillar.day .lab{color:var(--seal);font-weight:700}
+.pillar-note{text-align:center;font-size:12px;color:var(--ink-soft);margin:8px 0 0}
+
+.prose{font-family:var(--serif);font-size:16px;line-height:1.85;margin:0;word-break:keep-all}
+.overall{text-indent:1em}
+
+/* 분야별 — 서로 다른 크기와 배치 */
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:12px;grid-template-areas:"money money" "love health" "work work"}
+.fld{position:relative;padding:12px 12px 12px}
+.fld h4{margin:0 0 6px;font-family:var(--serif);font-size:16px;display:flex;align-items:baseline;gap:6px}
+.fld h4 b{font-family:var(--hanja);font-weight:600;font-size:13px;color:var(--ink-soft)}
+.fld p{margin:0;font-family:var(--serif);font-size:14.5px;line-height:1.75;word-break:keep-all}
+.fld.money{grid-area:money;border:1.5px solid rgba(110,80,40,.5);padding:14px 16px 14px 62px;background:rgba(232,199,122,.18)}
+.fld.money .coin{position:absolute;left:12px;top:14px;width:38px;height:38px;border-radius:50%;border:2px solid var(--earth);display:grid;place-items:center;font-family:var(--hanja);font-weight:600;color:var(--earth);font-size:17px}
+.fld.money .coin::after{content:"";position:absolute;inset:3px;border-radius:50%;border:1px dashed var(--earth);opacity:.7}
+.fld.love{grid-area:love;border-top:3px double var(--seal);padding:12px 4px 0 0}
+.fld.love h4{color:var(--seal)}
+.fld.health{grid-area:health;background:rgba(79,122,74,.12);border-radius:40px 4px 4px 4px;padding:14px 12px}
+.fld.health h4{color:var(--wood)}
+.fld.work{grid-area:work;border-left:4px solid var(--water);padding:4px 0 4px 14px}
+.fld.work h4{color:var(--water)}
+
+/* 월별 */
+.months{list-style:none;margin:0;padding:0;columns:1}
+.months li{display:grid;grid-template-columns:52px 1fr;gap:10px;padding:8px 0;border-bottom:1px dotted rgba(110,80,40,.45);align-items:baseline}
+.months li:last-child{border-bottom:0}
+.months .m{font-family:var(--serif);font-weight:700;font-size:15px;color:var(--ink);white-space:nowrap}
+.months .m small{display:block;font-family:var(--hanja);font-weight:600;font-size:10px;color:var(--ink-soft);letter-spacing:.1em;margin-top:-2px}
+.months .t{font-family:var(--serif);font-size:14.5px;line-height:1.65;word-break:keep-all}
+
+/* 고양이의 한마디 */
+.catword{display:flex;align-items:flex-end;gap:10px;margin-top:6px}
+.catword svg{flex:0 0 64px;width:64px;height:64px}
+.bubble{position:relative;flex:1;background:var(--night);color:var(--cream);padding:12px 16px;border-radius:16px 16px 16px 4px;
+  font-family:var(--hand);font-weight:700;font-size:19px;line-height:1.45;word-break:keep-all}
+.bubble::before{content:"";position:absolute;left:-7px;bottom:6px;border:7px solid transparent;border-right-color:var(--night);border-left:0}
+
+.disclaimer{margin:22px 0 0;text-align:center;font-size:11.5px;color:var(--ink-soft)}
+.brand{margin-top:14px;padding-top:10px;border-top:1px solid rgba(110,80,40,.35);text-align:center;font-family:var(--serif);font-weight:700;font-size:15px;letter-spacing:.12em;color:var(--ink)}
+.brand svg{width:14px;height:14px;vertical-align:-1px;margin-right:6px}
+
+.actions{display:flex;gap:10px;margin-top:16px}
+.actions button{flex:1;padding:13px 6px;border-radius:6px;font-family:var(--serif);font-weight:700;font-size:16px}
+.btn-line{background:none;border:1.5px solid var(--gold);color:var(--gold)}
+.btn-fill{background:var(--cream);border:1.5px solid var(--cream);color:var(--night)}
+.actions button:disabled{opacity:.5}
+
+/* 오류 */
+.error-box{background:var(--plum);border:1px dashed var(--gold-dim);border-radius:4px;padding:22px 18px;text-align:center}
+.error-box .cat-mini{width:84px;height:84px;margin:0 auto 4px;display:block;opacity:.8}
+.error-box h3{margin:0 0 12px;font-family:var(--serif);font-size:18px;color:var(--gold);word-break:keep-all}
+.error-detail{text-align:left;background:var(--night-deep);border-radius:3px;padding:10px 12px;font-size:13px;line-height:1.6;color:var(--cream-dim);word-break:keep-all;overflow-wrap:anywhere;margin:0 0 16px}
+.error-detail b{color:var(--cream);font-weight:700}
+.error-box .retry{padding:11px 28px;border:0;border-radius:6px;background:var(--gold);color:var(--night);font-family:var(--serif);font-weight:700;font-size:16px}
+
+/* 토스트 */
+.toast{position:fixed;left:50%;bottom:calc(28px + env(safe-area-inset-bottom));transform:translate(-50%,20px);opacity:0;z-index:60;
+  background:var(--cream);color:var(--night);padding:10px 20px;border-radius:999px;font-family:var(--serif);font-weight:700;font-size:15px;
+  box-shadow:0 8px 20px rgba(0,0,0,.4);transition:opacity .25s, transform .25s;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+/* ── 방명록(준비 중) 화면 ───────────── */
+.guest-view{min-height:100vh;display:flex;flex-direction:column}
+.guest-top{padding:18px 16px 0;max-width:440px;margin:0 auto;width:100%}
+.back-btn{border:0;background:none;color:var(--gold);font-family:var(--serif);font-weight:700;font-size:16px;padding:8px 4px}
+.guest-body{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px 16px 80px}
+.guest-body h2{font-family:var(--serif);font-weight:700;font-size:32px;color:var(--gold);margin:0 0 6px}
+.guest-body .sign{margin-top:22px;background:var(--paper);color:var(--ink);padding:18px 26px 16px;border-radius:2px;transform:rotate(-2deg);
+  box-shadow:0 10px 24px rgba(0,0,0,.4);position:relative}
+.guest-body .sign::before,.guest-body .sign::after{content:"";position:absolute;top:-30px;width:1.5px;height:32px;background:var(--gold-dim)}
+.guest-body .sign::before{left:22%}.guest-body .sign::after{right:22%}
+.guest-body .sign strong{display:block;font-family:var(--serif);font-size:24px}
+.guest-body .sign span{display:block;font-family:var(--hand);font-size:18px;color:var(--ink-soft);word-break:keep-all}
+.guest-body .sleep{width:150px;margin-top:30px}
+.guest-body .back-big{margin-top:30px;padding:12px 26px;border:1.5px solid var(--gold);border-radius:6px;background:none;color:var(--gold);font-family:var(--serif);font-weight:700;font-size:16px}
+
+@media (max-width:360px){
+  .title{font-size:38px}
+  .fields{grid-template-columns:1fr;grid-template-areas:"money" "love" "health" "work"}
+  .pillar .ch{font-size:24px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none !important;transition:none !important}
+}
+</style>
+</head>
+<body>
+
+<div id="sky" aria-hidden="true"><div class="moon"></div></div>
+
+<button class="guest-btn" id="guestBtn" type="button" aria-label="방명록 열기">
+  방명록
+  <svg viewBox="0 0 24 24" aria-hidden="true"><g fill="#3b2b1c"><ellipse cx="12" cy="16" rx="5" ry="4.2"/><ellipse cx="5.5" cy="10" rx="2.1" ry="2.7"/><ellipse cx="9.5" cy="6" rx="2.1" ry="2.7"/><ellipse cx="14.5" cy="6" rx="2.1" ry="2.7"/><ellipse cx="18.5" cy="10" rx="2.1" ry="2.7"/></g></svg>
+</button>
+
+<!-- ═══════════ 메인 화면 ═══════════ -->
+<div class="view" id="mainView">
+  <div class="awning" aria-hidden="true"></div>
+  <main class="wrap">
+    <header class="hero">
+      <div id="heroCat"></div>
+      <h1 class="title"><span class="yr">丁未年</span>2027 냥운세</h1>
+      <p class="subtitle">올해 운세, 내가 봐주겠다냥</p>
+    </header>
+
+    <form class="board" id="form" autocomplete="off" novalidate>
+      <div class="board-label">사 주 접 수</div>
+
+      <div class="field">
+        <div class="field-head">
+          <span class="field-name" id="lbDate">생년월일</span>
+          <div class="seg" role="group" aria-label="양력 음력 선택">
+            <button type="button" data-cal="solar" aria-pressed="true">양력</button>
+            <button type="button" data-cal="lunar" aria-pressed="false">음력</button>
+          </div>
+        </div>
+        <div class="row" role="group" aria-labelledby="lbDate">
+          <select id="year" class="grow" aria-label="태어난 해"></select>
+          <select id="month" aria-label="태어난 달"></select>
+          <select id="day" aria-label="태어난 날"></select>
+        </div>
+        <div class="leap-row" id="leapRow" hidden>
+          <label class="check"><input type="checkbox" id="leap"> 윤달이에요</label>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="field-head">
+          <span class="field-name" id="lbTime">태어난 시간 <small>선택</small></span>
+          <label class="check"><input type="checkbox" id="timeUnknown"> 모름</label>
+        </div>
+        <div class="row" role="group" aria-labelledby="lbTime">
+          <select id="hour" aria-label="태어난 시"></select>
+          <select id="minute" aria-label="태어난 분"></select>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="field-head"><span class="field-name">성별</span></div>
+        <div class="seg wide" role="group" aria-label="성별 선택">
+          <button type="button" data-gender="male" aria-pressed="false">남</button>
+          <button type="button" data-gender="female" aria-pressed="false">여</button>
+        </div>
+      </div>
+    </form>
+
+    <button class="go" id="goBtn" type="button" disabled>운세 보러 가기냥<svg class="paw" viewBox="0 0 24 24" aria-hidden="true"><g fill="currentColor"><ellipse cx="12" cy="16" rx="5" ry="4.2"/><ellipse cx="5.5" cy="10" rx="2.1" ry="2.7"/><ellipse cx="9.5" cy="6" rx="2.1" ry="2.7"/><ellipse cx="14.5" cy="6" rx="2.1" ry="2.7"/><ellipse cx="18.5" cy="10" rx="2.1" ry="2.7"/></g></svg></button>
+    <p class="hint" id="hint" aria-live="polite"></p>
+
+    <section id="resultArea" aria-live="polite"></section>
+  </main>
+</div>
+
+<!-- ═══════════ 방명록 (준비 중) 화면 ═══════════ -->
+<div class="view guest-view" id="guestView" hidden>
+  <div class="awning" aria-hidden="true"></div>
+  <div class="guest-top"><button class="back-btn" type="button" data-back>← 돌아가기</button></div>
+  <div class="guest-body">
+    <h2>다녀간 냥이들</h2>
+    <div class="sign">
+      <strong>준비 중이다냥</strong>
+      <span>곧 열린다냥.<br>조금만 기다려 달라냥</span>
+    </div>
+    <div id="sleepCat"></div>
+    <button class="back-big" type="button" data-back>← 돌아가기</button>
+  </div>
+</div>
+
+<!-- 로딩 -->
+<div class="loading" id="loading" hidden role="status" aria-live="polite">
+  <div id="loadingCat"></div>
+  <p class="loading-text" id="loadingText"></p>
+  <div class="loading-dots" aria-hidden="true"><i></i><i></i><i></i></div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(() => {
+  'use strict';
+
+  /* ───────── 상수 ───────── */
+  const API_URL = '/api/generate';
+  const LOADING_LINES = ['냥냥… 별자리를 읽는 중이다냥', '사주팔자를 펼쳐 보는 중이다냥', '수정구슬이 반짝인다냥…'];
+  const STEM_KO = { 甲:'갑',乙:'을',丙:'병',丁:'정',戊:'무',己:'기',庚:'경',辛:'신',壬:'임',癸:'계' };
+  const BRANCH_KO = { 子:'자',丑:'축',寅:'인',卯:'묘',辰:'진',巳:'사',午:'오',未:'미',申:'신',酉:'유',戌:'술',亥:'해' };
+  const ELEM = { 甲:'wood',乙:'wood',丙:'fire',丁:'fire',戊:'earth',己:'earth',庚:'metal',辛:'metal',壬:'water',癸:'water',
+                 寅:'wood',卯:'wood',巳:'fire',午:'fire',辰:'earth',戌:'earth',丑:'earth',未:'earth',申:'metal',酉:'metal',亥:'water',子:'water' };
+  const MONTH_HANJA = ['正月','二月','三月','四月','五月','六月','七月','八月','九月','十月','冬月','臘月'];
+  const FIELDS = [
+    { key:'money',  name:'재물운',     hanja:'財' },
+    { key:'love',   name:'연애운',     hanja:'緣' },
+    { key:'health', name:'건강운',     hanja:'康' },
+    { key:'work',   name:'직장·학업운', hanja:'業' },
+  ];
+
+  const $ = (s) => document.querySelector(s);
+  const el = (tag, cls, text) => { const n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; };
+
+  /* ───────── 고양이 일러스트 (SVG) ───────── */
+  function catSVG(uid, extraClass = '') {
+    return `
+<svg class="cat ${extraClass}" viewBox="0 0 240 250" role="img" aria-label="수정구슬 앞에 앉은 점술사 고양이">
+  <defs>
+    <radialGradient id="ball-${uid}" cx="40%" cy="35%" r="70%">
+      <stop offset="0" stop-color="#fffaf0"/>
+      <stop offset=".35" stop-color="#d7e2e6"/>
+      <stop offset=".8" stop-color="#7b8bb5"/>
+      <stop offset="1" stop-color="#3d4a7a"/>
+    </radialGradient>
+    <radialGradient id="halo-${uid}">
+      <stop offset="0" stop-color="#f3ecdc" stop-opacity=".9"/>
+      <stop offset="1" stop-color="#e8c77a" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <path class="tail" d="M160 208 C 204 206 214 164 194 150 C 186 145 178 152 185 158 C 198 168 192 194 162 194" fill="none" stroke="#3b3358" stroke-width="13" stroke-linecap="round"/>
+  <path d="M76 218 C 68 172 88 140 120 138 C 152 140 172 172 164 218 Z" fill="#3b3358"/>
+  <path d="M104 150 C 112 170 128 170 136 150 C 130 160 110 160 104 150 Z" fill="#4a4170"/>
+  <path d="M84 96 L 80 50 L 112 78 Z" fill="#3b3358"/>
+  <path d="M156 96 L 160 50 L 128 78 Z" fill="#3b3358"/>
+  <path d="M88 86 L 86 62 L 103 77 Z" fill="#7a5a7e"/>
+  <path d="M152 86 L 154 62 L 137 77 Z" fill="#7a5a7e"/>
+  <ellipse cx="120" cy="110" rx="45" ry="38" fill="#3b3358"/>
+  <path d="M96 76 C 104 54 110 38 118 24 C 124 13 137 8 148 15 C 137 17 131 25 131 35 C 135 51 140 63 144 76 Z" fill="#2a1f4a" stroke="#e8c77a" stroke-width="1.2"/>
+  <ellipse cx="120" cy="76" rx="34" ry="6.5" fill="#2a1f4a" stroke="#e8c77a" stroke-width="1.4"/>
+  <path d="M100 70 C 112 73 128 73 140 70" fill="none" stroke="#e8c77a" stroke-width="3"/>
+  <path d="M112 50 l1.6 3.6 3.6 1.6 -3.6 1.6 -1.6 3.6 -1.6 -3.6 -3.6 -1.6 3.6 -1.6z" fill="#e8c77a"/>
+  <path d="M128 31 a6 6 0 1 0 5 9 a4.6 4.6 0 1 1 -5 -9z" fill="#e8c77a"/>
+  <circle cx="148" cy="15" r="3" fill="#e8c77a"/>
+  <ellipse cx="102" cy="110" rx="10" ry="8" fill="#e8c77a"/>
+  <ellipse cx="138" cy="110" rx="10" ry="8" fill="#e8c77a"/>
+  <g class="pupils" fill="#141a36">
+    <ellipse cx="102" cy="110" rx="2.6" ry="6.4"/>
+    <ellipse cx="138" cy="110" rx="2.6" ry="6.4"/>
+  </g>
+  <circle cx="105" cy="107" r="1.6" fill="#fff"/><circle cx="141" cy="107" r="1.6" fill="#fff"/>
+  <path d="M116 121 L124 121 L120 126 Z" fill="#d79aa0"/>
+  <path d="M120 126 q -4 6 -10 3 M120 126 q 4 6 10 3" fill="none" stroke="#f3ecdc" stroke-width="1.6" stroke-linecap="round"/>
+  <ellipse cx="90" cy="124" rx="7" ry="4" fill="#7a5a7e" opacity=".55"/>
+  <ellipse cx="150" cy="124" rx="7" ry="4" fill="#7a5a7e" opacity=".55"/>
+  <g stroke="#f3ecdc" stroke-width="1.2" stroke-linecap="round" opacity=".8">
+    <path d="M94 122 L64 117"/><path d="M94 127 L66 131"/>
+    <path d="M146 122 L176 117"/><path d="M146 127 L174 131"/>
+  </g>
+  <circle class="glow" cx="120" cy="196" r="46" fill="url(#halo-${uid})" opacity=".5"/>
+  <path d="M98 238 L142 238 L134 222 L106 222 Z" fill="#8a6a35"/>
+  <path d="M90 244 L150 244 L142 236 L98 236 Z" fill="#b89a55"/>
+  <circle cx="120" cy="196" r="30" fill="url(#ball-${uid})"/>
+  <ellipse cx="110" cy="184" rx="9" ry="5" fill="#fff" opacity=".7" transform="rotate(-30 110 184)"/>
+  <path class="sparkle" d="M128 202 l1.4 3 3 1.4 -3 1.4 -1.4 3 -1.4 -3 -3 -1.4 3 -1.4z" fill="#fff" opacity=".6"/>
+  <ellipse cx="92" cy="190" rx="11" ry="8.5" fill="#3b3358"/>
+  <ellipse cx="148" cy="190" rx="11" ry="8.5" fill="#3b3358"/>
+  <g fill="#4a4170"><circle cx="88" cy="186" r="1.6"/><circle cx="92" cy="185" r="1.6"/><circle cx="96" cy="186" r="1.6"/>
+  <circle cx="144" cy="186" r="1.6"/><circle cx="148" cy="185" r="1.6"/><circle cx="152" cy="186" r="1.6"/></g>
+</svg>`;
+  }
+
+  function catHeadSVG() {
+    return `<svg viewBox="0 0 64 64" aria-hidden="true">
+  <path d="M10 30 L8 6 L26 20 Z M54 30 L56 6 L38 20 Z" fill="#3b3358"/>
+  <path d="M13 24 L12 12 L21 20 Z M51 24 L52 12 L43 20 Z" fill="#7a5a7e"/>
+  <ellipse cx="32" cy="38" rx="25" ry="21" fill="#3b3358"/>
+  <path d="M18 36 q5 -5 10 0" fill="none" stroke="#e8c77a" stroke-width="2.4" stroke-linecap="round"/>
+  <path d="M36 36 q5 -5 10 0" fill="none" stroke="#e8c77a" stroke-width="2.4" stroke-linecap="round"/>
+  <path d="M29.5 43 L34.5 43 L32 46 Z" fill="#d79aa0"/>
+  <path d="M32 46 q-2.5 4 -6 2 M32 46 q2.5 4 6 2" fill="none" stroke="#f3ecdc" stroke-width="1.3" stroke-linecap="round"/>
+</svg>`;
+  }
+
+  function sleepingCatSVG() {
+    return `<svg class="sleep" viewBox="0 0 160 90" aria-hidden="true">
+  <path d="M20 78 C 14 50 44 34 80 34 C 116 34 142 50 138 78 Z" fill="#3b3358"/>
+  <path d="M132 76 C 150 74 156 60 146 52" fill="none" stroke="#3b3358" stroke-width="10" stroke-linecap="round"/>
+  <path d="M30 56 L28 32 L46 44 Z M64 48 L70 26 L80 44 Z" fill="#3b3358"/>
+  <ellipse cx="52" cy="60" rx="26" ry="20" fill="#3b3358"/>
+  <path d="M38 60 q5 4 10 0 M56 60 q5 4 10 0" fill="none" stroke="#e8c77a" stroke-width="2" stroke-linecap="round"/>
+  <text x="96" y="26" font-family="Gaegu, cursive" font-size="16" fill="#e8c77a">z</text>
+  <text x="108" y="16" font-family="Gaegu, cursive" font-size="12" fill="#e8c77a" opacity=".7">z</text>
+  <rect x="10" y="78" width="140" height="4" rx="2" fill="#2a1f4a"/>
+</svg>`;
+  }
+
+  $('#heroCat').innerHTML = catSVG('hero');
+  $('#loadingCat').innerHTML = catSVG('load', 'peering');
+  $('#sleepCat').innerHTML = sleepingCatSVG();
+
+  /* ───────── 별 ───────── */
+  (function makeStars() {
+    const sky = $('#sky');
+    const n = window.innerWidth < 500 ? 60 : 110;
+    for (let i = 0; i < n; i++) {
+      const s = el('div', 'star');
+      const cross = Math.random() < 0.1;
+      if (cross) s.classList.add('cross');
+      else { const size = (Math.random() * 1.8 + 0.8).toFixed(1); s.style.width = s.style.height = size + 'px'; }
+      s.style.left = (Math.random() * 100).toFixed(2) + '%';
+      s.style.top = (Math.random() * 100).toFixed(2) + '%';
+      s.style.setProperty('--d', (Math.random() * 4 + 3).toFixed(1) + 's');
+      s.style.setProperty('--delay', (-Math.random() * 6).toFixed(1) + 's');
+      sky.appendChild(s);
+    }
+  })();
+
+  /* ───────── 입력 ───────── */
+  const state = { calendar: 'solar', gender: null };
+  const yearSel = $('#year'), monthSel = $('#month'), daySel = $('#day');
+  const hourSel = $('#hour'), minSel = $('#minute');
+  const leapChk = $('#leap'), unknownChk = $('#timeUnknown');
+  const goBtn = $('#goBtn'), hint = $('#hint');
+
+  function fillSelect(sel, placeholder, items) {
+    const prev = sel.value;
+    sel.innerHTML = '';
+    const ph = el('option', null, placeholder); ph.value = ''; sel.appendChild(ph);
+    for (const [v, label] of items) { const o = el('option', null, label); o.value = String(v); sel.appendChild(o); }
+    if (items.some(([v]) => String(v) === prev)) sel.value = prev;
+  }
+  const range = (a, b, step = 1) => { const r = []; if (step > 0) for (let i = a; i <= b; i += step) r.push(i); else for (let i = a; i >= b; i += step) r.push(i); return r; };
+
+  fillSelect(yearSel, '년', range(2026, 1930, -1).map((y) => [y, y + '년']));
+  fillSelect(monthSel, '월', range(1, 12).map((m) => [m, m + '월']));
+  fillSelect(hourSel, '시', range(0, 23).map((h) => [h, String(h).padStart(2, '0') + '시']));
+  fillSelect(minSel, '분', range(0, 59).map((m) => [m, String(m).padStart(2, '0') + '분']));
+
+  function refreshDays() {
+    const y = +yearSel.value, m = +monthSel.value;
+    let max = 31;
+    if (state.calendar === 'lunar') max = 30;
+    else if (y && m) max = new Date(y, m, 0).getDate();
+    else if (m) max = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][m - 1];
+    fillSelect(daySel, '일', range(1, max).map((d) => [d, d + '일']));
+  }
+  refreshDays();
+
+  document.querySelectorAll('[data-cal]').forEach((b) => b.addEventListener('click', () => {
+    state.calendar = b.dataset.cal;
+    document.querySelectorAll('[data-cal]').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+    $('#leapRow').hidden = state.calendar !== 'lunar';
+    if (state.calendar !== 'lunar') leapChk.checked = false;
+    refreshDays(); validateForm();
+  }));
+  document.querySelectorAll('[data-gender]').forEach((b) => b.addEventListener('click', () => {
+    state.gender = b.dataset.gender;
+    document.querySelectorAll('[data-gender]').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+    validateForm();
+  }));
+  yearSel.addEventListener('change', () => { refreshDays(); validateForm(); });
+  monthSel.addEventListener('change', () => { refreshDays(); validateForm(); });
+  [daySel, hourSel, minSel, leapChk].forEach((x) => x.addEventListener('change', validateForm));
+  unknownChk.addEventListener('change', () => {
+    hourSel.disabled = minSel.disabled = unknownChk.checked;
+    validateForm();
+  });
+
+  function validateForm() {
+    let msg = '';
+    if (!yearSel.value || !monthSel.value || !daySel.value) msg = '생년월일을 알려달라냥';
+    else if (!unknownChk.checked && (!hourSel.value || !minSel.value)) msg = "태어난 시간을 고르거나 '모름'에 체크해 달라냥";
+    else if (!state.gender) msg = '성별을 골라 달라냥';
+    hint.textContent = msg;
+    goBtn.disabled = !!msg;
+    return !msg;
+  }
+  validateForm();
+
+  /* ───────── 사주 계산 (만세력: lunar-javascript) ───────── */
+  function computeSaju() {
+    if (typeof Solar === 'undefined' || typeof Lunar === 'undefined') {
+      throw { code: 'LIB_LOAD', status: 'CLIENT', message: '만세력 라이브러리(lunar-javascript)를 불러오지 못했습니다. 인터넷 연결을 확인하고 새로고침해 주세요.' };
+    }
+    const y = +yearSel.value, m = +monthSel.value, d = +daySel.value;
+    const timeKnown = !unknownChk.checked;
+    const h = timeKnown ? +hourSel.value : 12;
+    const mi = timeKnown ? +minSel.value : 0;
+    let lunar;
+
+    if (state.calendar === 'solar') {
+      const dt = new Date(y, m - 1, d);
+      if (dt.getFullYear() !== y || dt.getMonth() !== m - 1 || dt.getDate() !== d) {
+        throw { code: 'BAD_DATE', status: 'CLIENT', message: `${y}년 ${m}월 ${d}일은 없는 날짜입니다.` };
+      }
+      lunar = Solar.fromYmdHms(y, m, d, h, mi, 0).getLunar();
+    } else {
+      const lm = leapChk.checked ? -m : m;
+      const label = `음력 ${y}년 ${leapChk.checked ? '윤' : ''}${m}월 ${d}일`;
+      try {
+        lunar = Lunar.fromYmdHms(y, lm, d, h, mi, 0);
+        const back = lunar.getSolar().getLunar();
+        if (back.getYear() !== y || back.getMonth() !== lm || back.getDay() !== d) throw new Error('mismatch');
+      } catch (e) {
+        throw { code: 'BAD_LUNAR_DATE', status: 'CLIENT',
+          message: leapChk.checked ? `${label}은 없는 날짜입니다. 그해에 윤${m}월이 없거나 날짜가 맞지 않아요.` : `${label}은 없는 날짜입니다.` };
+      }
+    }
+
+    const ec = lunar.getEightChar();
+    const pillars = { year: ec.getYear(), month: ec.getMonth(), day: ec.getDay(), time: timeKnown ? ec.getTime() : null };
+
+    let daYun = null;
+    try {
+      const list = ec.getYun(state.gender === 'male' ? 1 : 0).getDaYun();
+      const cur = list.find((dy) => dy.getGanZhi() && dy.getStartYear() <= 2027 && dy.getEndYear() >= 2027);
+      if (cur) daYun = { ganZhi: cur.getGanZhi(), startYear: cur.getStartYear(), endYear: cur.getEndYear() };
+    } catch (_) { /* 대운은 없어도 풀이 가능 */ }
+
+    return { pillars, timeKnown, gender: state.gender, birthYear: y, daYun };
+  }
+
+  /* ───────── 로딩 ───────── */
+  let loadingTimer = null;
+  function showLoading() {
+    const box = $('#loading'), txt = $('#loadingText');
+    let i = 0;
+    txt.textContent = LOADING_LINES[0];
+    box.hidden = false;
+    document.body.style.overflow = 'hidden';
+    loadingTimer = setInterval(() => {
+      i = (i + 1) % LOADING_LINES.length;
+      txt.style.opacity = 0;
+      setTimeout(() => { txt.textContent = LOADING_LINES[i]; txt.style.opacity = 1; }, 250);
+    }, 2000);
+  }
+  function hideLoading() {
+    clearInterval(loadingTimer);
+    $('#loading').hidden = true;
+    document.body.style.overflow = '';
+  }
+
+  /* ───────── 요청 ───────── */
+  let lastPayload = null, lastResult = null, busy = false;
+
+  goBtn.addEventListener('click', () => {
+    if (!validateForm() || busy) return;
+    let payload;
+    try { payload = computeSaju(); }
+    catch (err) { renderError(err); return; }
+    requestFortune(payload);
+  });
+
+  async function requestFortune(payload) {
+    busy = true; goBtn.disabled = true;
+    lastPayload = payload;
+    showLoading();
+    const started = Date.now();
+    let outcome;
+    try {
+      const res = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+      const raw = await res.text();
+      let data = null;
+      try { data = JSON.parse(raw); } catch (_) {}
+      if (!res.ok) {
+        const e = (data && data.error) || {};
+        outcome = { error: {
+          code: e.code || res.status,
+          status: e.status || res.statusText || '',
+          message: e.message || (raw ? raw.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 300) : '서버가 이유를 알려주지 않았습니다.'),
+        } };
+      } else if (!data || !data.overall) {
+        outcome = { error: { code: 'BAD_RESPONSE', status: String(res.status), message: '서버 응답을 읽지 못했습니다. ' + raw.slice(0, 200) } };
+      } else {
+        outcome = { data };
+      }
+    } catch (err) {
+      outcome = { error: { code: 'NETWORK', status: 'FETCH_FAILED',
+        message: (!/^https?:$/.test(location.protocol) ? '지금은 웹 주소(http/https)가 아닌 미리보기나 파일로 열려 있어서 서버 함수(/api/generate)를 부를 수 없어요. Vercel에 배포한 주소나 `vercel dev`로 열어 주세요. ' : '서버에 연결하지 못했습니다. ') + (err && err.message ? `(${err.message})` : '') } };
+    }
+    const wait = Math.max(0, 1200 - (Date.now() - started));
+    setTimeout(() => {
+      hideLoading();
+      busy = false; validateForm();
+      if (outcome.data) { lastResult = outcome.data; renderResult(payload, outcome.data); }
+      else renderError(outcome.error);
+    }, wait);
+  }
+
+  /* ───────── 결과 그리기 ───────── */
+  function pillarCol(label, gz, isDay) {
+    const col = el('div', 'pillar' + (isDay ? ' day' : ''));
+    col.appendChild(el('div', 'lab', label));
+    const s = el('div', 'ch ' + ELEM[gz[0]], gz[0]);
+    const b = el('div', 'ch ' + ELEM[gz[1]], gz[1]);
+    col.append(s, el('div', 'ko', STEM_KO[gz[0]]), b, el('div', 'ko', BRANCH_KO[gz[1]]));
+    return col;
+  }
+  function rule(text, hanja) {
+    const r = el('div', 'rule'); const sp = el('span', null, text);
+    if (hanja) sp.appendChild(el('em', null, hanja));
+    r.appendChild(sp); return r;
+  }
+
+  function renderResult(payload, data) {
+    const area = $('#resultArea');
+    area.innerHTML = '';
+
+    const card = el('article', 'paper'); card.id = 'resultCard';
+    ['tl', 'tr', 'bl', 'br'].forEach((c) => card.appendChild(el('i', 'corner ' + c)));
+
+    const head = el('div', 'r-head');
+    head.appendChild(el('div', 'r-kicker', '丁未年 新年運勢'));
+    head.appendChild(el('h2', 'r-title', '2027년 운세가 나왔다냥'));
+    const seal = el('div', 'seal'); seal.innerHTML = '丁未<br>占'; head.appendChild(seal);
+    card.appendChild(head);
+
+    // 내 사주 (오른쪽부터 연·월·일·시가 전통 순서지만, 화면에선 시·일·월·연으로 표시)
+    card.appendChild(rule('내 사주', '四柱'));
+    const p = payload.pillars;
+    const row = el('div', 'pillars');
+    if (payload.timeKnown) row.appendChild(pillarCol('시주', p.time));
+    row.appendChild(pillarCol('일주', p.day, true));
+    row.appendChild(pillarCol('월주', p.month));
+    row.appendChild(pillarCol('연주', p.year));
+    card.appendChild(row);
+    card.appendChild(el('p', 'pillar-note', payload.timeKnown ? '여덟 글자 · 붉은 테두리가 나를 뜻하는 일주예요' : '태어난 시간을 몰라 여섯 글자로 풀었어요'));
+
+    card.appendChild(rule('총운', '總運'));
+    card.appendChild(el('p', 'prose overall', data.overall));
+
+    card.appendChild(rule('분야별 운세', '分野'));
+    const grid = el('div', 'fields');
+    for (const f of FIELDS) {
+      const box = el('section', 'fld ' + f.key);
+      if (f.key === 'money') { const c = el('div', 'coin'); c.textContent = '財'; box.appendChild(c); }
+      const h = el('h4', null, f.name);
+      if (f.key !== 'money') h.appendChild(el('b', null, f.hanja));
+      box.appendChild(h);
+      box.appendChild(el('p', null, data.fields[f.key]));
+      grid.appendChild(box);
+    }
+    card.appendChild(grid);
+
+    card.appendChild(rule('월별 운세', '月運'));
+    const ul = el('ul', 'months');
+    data.months.forEach((t, i) => {
+      const li = el('li');
+      const m = el('div', 'm', (i + 1) + '월'); m.appendChild(el('small', null, MONTH_HANJA[i]));
+      li.append(m, el('div', 't', t));
+      ul.appendChild(li);
+    });
+    card.appendChild(ul);
+
+    card.appendChild(rule('고양이의 한마디'));
+    const cw = el('div', 'catword');
+    cw.innerHTML = catHeadSVG();
+    cw.appendChild(el('div', 'bubble', data.catWord));
+    card.appendChild(cw);
+
+    card.appendChild(el('p', 'disclaimer', '재미로 보는 운세예요. 중요한 결정은 스스로 내려 주세요.'));
+    const brand = el('div', 'brand');
+    brand.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><g fill="#3b2b1c"><ellipse cx="12" cy="16" rx="5" ry="4.2"/><ellipse cx="5.5" cy="10" rx="2.1" ry="2.7"/><ellipse cx="9.5" cy="6" rx="2.1" ry="2.7"/><ellipse cx="14.5" cy="6" rx="2.1" ry="2.7"/><ellipse cx="18.5" cy="10" rx="2.1" ry="2.7"/></g></svg>';
+    brand.appendChild(document.createTextNode('2027 냥운세'));
+    card.appendChild(brand);
+
+    area.appendChild(card);
+
+    const actions = el('div', 'actions');
+    const saveBtn = el('button', 'btn-fill', '이미지 저장'); saveBtn.type = 'button';
+    const copyBtn = el('button', 'btn-line', '결과 복사'); copyBtn.type = 'button';
+    saveBtn.addEventListener('click', () => saveImage(saveBtn));
+    copyBtn.addEventListener('click', copyResult);
+    actions.append(saveBtn, copyBtn);
+    area.appendChild(actions);
+
+    requestAnimationFrame(() => area.scrollIntoView({ behavior: 'smooth', block: 'start' }));
+  }
+
+  function renderError(err) {
+    const e = err || {};
+    const area = $('#resultArea');
+    area.innerHTML = '';
+    const box = el('div', 'error-box');
+    box.innerHTML = `<svg class="cat-mini" viewBox="0 0 64 64" aria-hidden="true">
+      <path d="M10 30 L8 6 L26 20 Z M54 30 L56 6 L38 20 Z" fill="#3b3358"/>
+      <ellipse cx="32" cy="38" rx="25" ry="21" fill="#3b3358"/>
+      <path d="M19 33 l8 4 M45 33 l-8 4" stroke="#e8c77a" stroke-width="2.4" stroke-linecap="round"/>
+      <path d="M26 49 q6 -5 12 0" fill="none" stroke="#f3ecdc" stroke-width="1.6" stroke-linecap="round"/></svg>`;
+    box.appendChild(el('h3', null, '수정구슬이 흐려졌다냥. 다시 눌러 달라냥'));
+    const detail = el('div', 'error-detail');
+    const l1 = el('div'); l1.appendChild(el('b', null, '오류 번호: '));
+    l1.appendChild(document.createTextNode(String(e.code ?? '알 수 없음') + (e.status ? ` (${e.status})` : '')));
+    const l2 = el('div'); l2.appendChild(el('b', null, '오류 내용: '));
+    l2.appendChild(document.createTextNode(String(e.message || '알 수 없는 오류')));
+    detail.append(l1, l2);
+    box.appendChild(detail);
+    const retry = el('button', 'retry', '다시 시도하기냥'); retry.type = 'button';
+    retry.addEventListener('click', () => {
+      if (e.status === 'CLIENT' || !lastPayload) { area.innerHTML = ''; $('#form').scrollIntoView({ behavior: 'smooth' }); return; }
+      requestFortune(lastPayload);
+    });
+    box.appendChild(retry);
+    area.appendChild(box);
+    requestAnimationFrame(() => area.scrollIntoView({ behavior: 'smooth', block: 'start' }));
+  }
+
+  /* ───────── 토스트 ───────── */
+  let toastTimer;
+  function toast(msg) {
+    const t = $('#toast'); t.textContent = msg; t.classList.add('show');
+    clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 1800);
+  }
+
+  /* ───────── 결과 복사 ───────── */
+  async function copyResult() {
+    if (!lastResult) return;
+    const d = lastResult;
+    const link = location.origin && location.origin !== 'null' ? location.origin + location.pathname.replace(/index\.html$/, '') : location.href;
+    const text = [
+      '[2027 냥운세] 나의 2027년 운세', '',
+      '■ 총운', d.overall, '',
+      ...FIELDS.flatMap((f) => ['■ ' + f.name, d.fields[f.key], '']),
+      '■ 고양이의 한마디', d.catWord, '',
+      '나도 보러 가기 → ' + link,
+    ].join('\n');
+    let ok = false;
+    try { await navigator.clipboard.writeText(text); ok = true; } catch (_) {
+      const ta = el('textarea'); ta.value = text; ta.setAttribute('readonly', '');
+      ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0;';
+      document.body.appendChild(ta); ta.select(); ta.setSelectionRange(0, text.length);
+      try { ok = document.execCommand('copy'); } catch (_) {}
+      ta.remove();
+    }
+    toast(ok ? '복사했다냥!' : '복사하지 못했다냥. 다시 눌러 달라냥');
+  }
+
+  /* ───────── 이미지 저장 ───────── */
+  const blobToDataURL = (blob) => new Promise((ok, no) => { const r = new FileReader(); r.onload = () => ok(r.result); r.onerror = no; r.readAsDataURL(blob); });
+
+  // 결과에 쓰인 글자만 담은 작은 웹폰트를 받아서 이미지에 넣는다 (한글 폰트 전체를 받지 않도록).
+  async function buildFontCSS(text) {
+    const chars = Array.from(new Set((text + '0123456789년월일운세냥·').replace(/\s/g, ''))).join('');
+    const families = ['Gowun+Batang:wght@400;700', 'Gaegu:wght@700', 'Noto+Serif+KR:wght@600'];
+    const parts = await Promise.all(families.map(async (fam) => {
+      const res = await fetch(`https://fonts.googleapis.com/css2?family=${fam}&text=${encodeURIComponent(chars)}`);
+      if (!res.ok) throw new Error('font css ' + res.status);
+      let css = await res.text();
+      const urls = Array.from(new Set(Array.from(css.matchAll(/url\((['"]?)(https:[^)'"]+)\1\)/g), (m) => m[2])));
+      for (const u of urls) {
+        const blob = await (await fetch(u)).blob();
+        css = css.split(u).join(await blobToDataURL(blob));
+      }
+      return css;
+    }));
+    return parts.join('\n');
+  }
+
+  async function saveImage(btn) {
+    const node = $('#resultCard');
+    if (!node || typeof htmlToImage === 'undefined') { toast('이미지 도구를 불러오지 못했다냥'); return; }
+    btn.disabled = true; const label = btn.textContent; btn.textContent = '그리는 중이다냥…';
+    try {
+      let fontEmbedCSS = '';
+      try { fontEmbedCSS = await buildFontCSS(node.innerText); } catch (_) { fontEmbedCSS = ''; }
+      const opts = { pixelRatio: Math.min(3, Math.max(2, window.devicePixelRatio || 2)), fontEmbedCSS, style: { margin: '0', boxShadow: 'none' } };
+      const isIOS = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+      if (isIOS) { try { await htmlToImage.toPng(node, opts); } catch (_) {} } // iOS Safari 첫 렌더 누락 방지
+      const dataUrl = await htmlToImage.toPng(node, opts);
+      const fileName = '2027-냥운세.png';
+      const blob = await (await fetch(dataUrl)).blob();
+      const file = new File([blob], fileName, { type: 'image/png' });
+      const touch = navigator.maxTouchPoints > 0 && /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent) || isIOS;
+      if (touch && navigator.canShare && navigator.canShare({ files: [file] })) {
+        try { await navigator.share({ files: [file], title: '2027 냥운세' }); toast('이미지를 꺼냈다냥!'); return; }
+        catch (err) { if (err && err.name === 'AbortError') return; }
+      }
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob); a.download = fileName;
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+      toast('이미지를 저장했다냥!');
+    } catch (err) {
+      toast('이미지를 만들지 못했다냥. 다시 눌러 달라냥');
+    } finally {
+      btn.disabled = false; btn.textContent = label;
+    }
+  }
+
+  /* ───────── 방명록(준비 중) 화면 전환 ───────── */
+  const mainView = $('#mainView'), guestView = $('#guestView'), guestBtn = $('#guestBtn');
+  let savedScroll = 0;
+  function showView(name) {
+    const guest = name === 'guest';
+    if (guest && mainView.hidden === false) savedScroll = window.scrollY;
+    mainView.hidden = guest;
+    guestView.hidden = !guest;
+    guestBtn.hidden = guest;
+    window.scrollTo(0, guest ? 0 : savedScroll);
+  }
+  guestBtn.addEventListener('click', () => {
+    history.pushState({ view: 'guest' }, '', '#guestbook');
+    showView('guest');
+  });
+  document.querySelectorAll('[data-back]').forEach((b) => b.addEventListener('click', () => {
+    if (history.state && history.state.view === 'guest') history.back();
+    else { history.replaceState(null, '', location.pathname + location.search); showView('main'); }
+  }));
+  window.addEventListener('popstate', () => showView(location.hash === '#guestbook' ? 'guest' : 'main'));
+  if (location.hash === '#guestbook') showView('guest');
+})();
+</script>
+</body>
+</html>
