@@ -271,6 +271,17 @@ select option{background:var(--night);color:var(--cream)}
 .guest-body .sleep{width:150px;margin-top:30px}
 .guest-body .back-big{margin-top:30px;padding:12px 26px;border:1.5px solid var(--gold);border-radius:6px;background:none;color:var(--gold);font-family:var(--serif);font-weight:700;font-size:16px}
 
+/* ── 이미지 보기 시트 (카카오톡 등 인앱 브라우저용) ── */
+.img-sheet{position:fixed;inset:0;z-index:70;background:rgba(14,19,40,.96);display:flex;flex-direction:column;align-items:center;padding:calc(16px + env(safe-area-inset-top)) 16px calc(16px + env(safe-area-inset-bottom));overflow-y:auto}
+.img-sheet p{margin:4px 0 12px;text-align:center;font-family:var(--serif);font-weight:700;font-size:17px;color:var(--gold);word-break:keep-all}
+.img-sheet p small{display:block;font-family:var(--sans);font-weight:400;font-size:13px;color:var(--cream-dim);margin-top:4px}
+.img-sheet img{width:100%;max-width:420px;height:auto;border-radius:2px;box-shadow:0 10px 30px rgba(0,0,0,.5);-webkit-touch-callout:default;user-select:auto}
+.img-sheet .sheet-btns{position:sticky;bottom:calc(-16px - env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:10px;width:100%;max-width:420px;margin-top:16px;padding:12px 0 calc(16px + env(safe-area-inset-bottom));background:linear-gradient(transparent,rgba(14,19,40,.98) 22%)}
+.img-sheet button{padding:13px;border-radius:6px;font-family:var(--serif);font-weight:700;font-size:16px}
+.img-sheet .ext{background:var(--gold);border:0;color:var(--night)}
+.img-sheet .ext small{display:block;font-family:var(--sans);font-weight:400;font-size:12px;margin-top:2px}
+.img-sheet .close{background:none;border:1.5px solid var(--cream-dim);color:var(--cream)}
+
 @media (max-width:360px){
   .title{font-size:38px}
   .fields{grid-template-columns:1fr;grid-template-areas:"money" "love" "health" "work"}
@@ -368,6 +379,16 @@ select option{background:var(--night);color:var(--cream)}
   <div id="loadingCat"></div>
   <p class="loading-text" id="loadingText"></p>
   <div class="loading-dots" aria-hidden="true"><i></i><i></i><i></i></div>
+</div>
+
+<!-- 이미지 보기 (카카오톡 인앱 브라우저처럼 바로 저장이 안 되는 곳에서 사용) -->
+<div class="img-sheet" id="imgSheet" hidden role="dialog" aria-modal="true" aria-label="운세 이미지">
+  <p>이미지를 길게 눌러 저장해 달라냥<small>‘이미지 저장’ 또는 ‘사진에 추가’를 고르면 돼요</small></p>
+  <img id="imgSheetImg" alt="2027 냥운세 결과 이미지">
+  <div class="sheet-btns">
+    <button class="ext" id="openExternalBtn" type="button" hidden>다른 브라우저로 열기<small>저장이 안 되면 눌러 주세요 · 운세는 거기서 다시 봐야 해요</small></button>
+    <button class="close" id="imgSheetClose" type="button">닫기</button>
+  </div>
 </div>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -846,9 +867,15 @@ select option{background:var(--night);color:var(--cream)}
     try {
       let fontEmbedCSS = '';
       try { fontEmbedCSS = await buildFontCSS(node.innerText); } catch (_) { fontEmbedCSS = ''; }
-      const opts = { pixelRatio: Math.min(3, Math.max(2, window.devicePixelRatio || 2)), fontEmbedCSS, style: { margin: '0', boxShadow: 'none' } };
+      const opts = { pixelRatio: 2, fontEmbedCSS, style: { margin: '0', boxShadow: 'none' } };
       const isIOS = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
       if (isIOS) { try { await htmlToImage.toPng(node, opts); } catch (_) {} } // iOS Safari 첫 렌더 누락 방지
+      // 카카오톡·네이버·인스타 등 인앱 브라우저는 파일 다운로드/공유를 막아 "지원하지 않는 파일형식"이 뜬다.
+      // 그런 곳에서는 가벼운 JPEG로 만들어 화면에 띄우고, 길게 눌러 저장하게 한다.
+      if (isInAppBrowser()) {
+        showImageSheet(await htmlToImage.toJpeg(node, { ...opts, quality: 0.9, backgroundColor: '#efe3c8' }));
+        return;
+      }
       const dataUrl = await htmlToImage.toPng(node, opts);
       const fileName = '2027-냥운세.png';
       const blob = await (await fetch(dataUrl)).blob();
@@ -869,6 +896,27 @@ select option{background:var(--night);color:var(--cream)}
       btn.disabled = false; btn.textContent = label;
     }
   }
+
+  /* ───────── 인앱 브라우저용 이미지 보기 ───────── */
+  const isKakao = () => /KAKAOTALK/i.test(navigator.userAgent);
+  const isInAppBrowser = () => isKakao() || /NAVER\(inapp|Instagram|FBAN|FBAV|Line\/|DaumApps|everytimeApp|; wv\)/i.test(navigator.userAgent);
+  const imgSheet = $('#imgSheet');
+  function showImageSheet(dataUrl) {
+    $('#imgSheetImg').src = dataUrl;
+    $('#openExternalBtn').hidden = !isKakao();
+    imgSheet.hidden = false;
+    document.body.style.overflow = 'hidden';
+  }
+  function closeImageSheet() {
+    imgSheet.hidden = true;
+    $('#imgSheetImg').removeAttribute('src');
+    document.body.style.overflow = '';
+  }
+  $('#imgSheetClose').addEventListener('click', closeImageSheet);
+  $('#openExternalBtn').addEventListener('click', () => {
+    const url = location.origin + location.pathname;
+    location.href = 'kakaotalk://web/openExternal?url=' + encodeURIComponent(url);
+  });
 
   /* ───────── 방명록(준비 중) 화면 전환 ───────── */
   const mainView = $('#mainView'), guestView = $('#guestView'), guestBtn = $('#guestBtn');
